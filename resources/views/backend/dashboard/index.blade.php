@@ -1,9 +1,9 @@
 @extends('backend.layouts.master')
 @section('title')
-    Live Bakery Dashboard Page
+    Vedha Foods
 @endsection
 @section('css')
-    <link rel="stylesheet" href="/backend/plugins/select2.min.css">
+    <link rel="stylesheet" href="{{asset('backend/plugins/select2.min.css')}}">
     <!-- NProgress -->
     <link href="{{asset('backend/vendors/nprogress/nprogress.css')}}" rel="stylesheet">
     <!-- iCheck -->
@@ -24,18 +24,17 @@
         <!-- top tiles -->
         <div class="row tile_count" style="font-size: x-large;">
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                <div class="info-box blue-bg bg-primary" style="text-align: center">
+                <div class="info-box blue-bg bg-red" style="text-align: center;border-radius: 5px;">
                     <i class="fa fa-money"></i>
                     <div class="count">
-                        {{$totalcash - $totalwithdraw}}
-                        <a class="btn btn-info" href="{{route('withdraw-petty-cash.create')}}">Pick Cash</a>
+                        Rs. 0
                     </div>
-                    <div class="title">Current Petty Cash</div>
+                    <div class="title">Current Balance</div>
                 </div><!--/.info-box-->
             </div><!--/.col-->
 
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                <div class="info-box brown-bg bg-info" style="text-align: center">
+                <div class="info-box brown-bg bg-primary" style="text-align: center;border-radius: 5px;">
                     <i class="fa fa-shopping-cart"></i>
                     <div class="count">{{$totalrevenue}}</div>
                     <div class="title">Total Sales Revenue</div>
@@ -43,15 +42,15 @@
             </div><!--/.col-->
 
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                <div class="info-box dark-bg bg-primary" style="text-align: center">
+                <div class="info-box dark-bg bg-red" style="text-align: center;border-radius: 5px;">
                     <i class="fa fa-thumbs-o-up"></i>
                     <div class="count">{{$totalcategory}}</div>
                     <div class="title">Total Product Category</div>
                 </div><!--/.info-box-->
             </div><!--/.col-->
             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                <div class="info-box dark-bg bg-info" style="text-align: center">
-                    <i class="fa fa-thumbs-o-up"></i>
+                <div class="info-box dark-bg bg-primary" style="text-align: center;border-radius: 5px;">
+                    <i class="fa fa-product-hunt"></i>
                     <div class="count">{{$totalproduct}}</div>
                     <div class="title">Total No. of Product</div>
                 </div><!--/.info-box-->
@@ -68,6 +67,7 @@
                 {{ Session::get('error_message') }}
             </div>
         @endif
+        <div class="resp"></div>
         <br>
         <div class="row">
             <div class="col-md-6">
@@ -95,10 +95,6 @@
                             <div class="form-group">
                                 <label for="product_id">Chose Product</label>
                                 <select class="form-control js-example-basic-single" id="product_id" name="product_id" data-placeholder="--Search Product--" required>
-                                    <option value="" selected>--Select Product--</option>
-                                    @foreach($product as $m)
-                                        <option value="{{$m->id}}">Code: {{$m->code}} {{$m->name}} Stock:{{$m->stock}} &nbsp;  Price:{{$m->price}}</option>
-                                    @endforeach
                                 </select>
                                 <span class="error"><b>
                                        @if($errors->has('product_id'))
@@ -115,7 +111,7 @@
                                          @endif</b></span>
                             </div>
                             <div class="form-group">
-                                <label for="price">Price*</label>
+                                <label for="price">Price per/pices*</label>
                                 <input type="number" class="form-control" name="price" id="price" placeholder="price" required>
                                 <span class="error"><b>
                                          @if($errors->has('price'))
@@ -124,21 +120,24 @@
                             </div>
                             <div class="form-group">
                                 <label for="sales_quantity">Sales Quantity</label>
-                                <input type="number" min="1" class="form-control" id="sales_quantity" name="sales_quantity" placeholder="Quantity" required>
+                                <input type="number" min="1" value="1" class="form-control" id="sales_quantity" name="sales_quantity" placeholder="Quantity" required>
                                 <span class="error"><b>
                                          @if($errors->has('sales_quantity'))
                                             {{$errors->first('sales_quantity')}}
                                          @endif</b></span>
                             </div>
+
                             <div class="form-group">
                                 <label>Sales Status:- &nbsp;</label>
                                 <input type="radio" name="sales_status" value="1" id="Active" checked=""><label for="Active"> Cash Sales </label>
                                 <input type="radio" name="sales_status" id="deactive" value="0"><label for="deactive"> Credit Sales </label>
                             </div>
+                            <input type="hidden" name="birthday_status" value="0">
+                            <input type="hidden" name="dob" value="2017-">
+                            <input type="hidden" name="phone" value="977-">
                             <!-- /.box-body -->
                             <div class="box-footer">
-                                <button type="submit" name="btnSave" class="btn btn-primary">Make QuickSales
-                                </button>
+                                <button type="submit" name="btnSave" class="btn btn-primary"> Make QuickSales </button>
                             </div>
                         </form>
                     </div>
@@ -166,13 +165,16 @@
                     </div>
                     <div class="x_content">
                         <div id="saleslist">
+
                         </div>
-                        <a href="{{route('sales.printall')}}" class="btn btn-info"><i class="fa fa-print"></i> Print</a>
+                        <div id="ajaxform">
+
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-12">
                 <div class="x_panel">
                     <div class="x_title">
@@ -198,14 +200,14 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <br/>
     </div>
     <!-- /page content -->
 @endsection
 
 @section('script')
-    <script src="/backend/plugins/select2.min.js"></script>
+    <script src="{{asset('backend/plugins/select2.min.js')}}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $(".js-example-basic-single").select2();
@@ -244,22 +246,6 @@
                     }
                 });
             });
-            $('#sales_quantity').keyup(function () {
-                var qty = $(this).val();
-                var price = $('#price').val();
-                var path = 'gettotalprice';
-                $.ajax({
-                    url: path,
-                    method: 'post',
-                    data: {'sales_quantity': qty, 'price': price, '_token': $('input[name=_token]').val()},
-                    dataType: 'text',
-                    success: function (resp) {
-                        console.log('keyed');
-                        //$('#price').empty();
-                        $('#price').val(resp);
-                    }
-                });
-            });
         });
     </script>
     <script>
@@ -279,15 +265,22 @@
                     type: post,
                     data: data,
                     success: function (data) {
+                        refreshproduct();
                         readsales();
-                        alert(data.success_message);
+                        ajaxform();
+                        var m = "<div class='alert alert-success'>" + data.success_message + "</div>";
+                        // alert(data.success_message);
+                        $('.resp').html(m);
                         document.getElementById("btnSave").reset();
                     }
                 });
             });
         });
         readsales();
-
+        refreshproduct();
+        readsales();
+        refreshproduct();
+        ajaxform();
         function readsales() {
             $.ajax({
                 type: 'get',
@@ -298,8 +291,48 @@
                 }
             })
         }
+        function ajaxform() {
+            $.ajax({
+                type: 'get',
+                url: "{{url('ajax-form')}}",
+                dataType: 'html',
+                success: function (data) {
+                    $('#ajaxform').html(data);
+                }
+            })
+        }
+        function refreshproduct() {
+            $.ajax({
+                type: 'get',
+                url: "{{url('refresh-product')}}",
+                dataType: 'html',
+                success: function (data) {
+                    $('#product_id').html(data);
+                }
+            })
+        }
+        function printorder() {
+            $.ajax({
+                url: "{{url('sales-allpdf')}}",
+                type: 'get',
+                dataType: 'html',
+                success:function(data) {
+                    var mywindow = window.open('', 'Sabaiko Live Bakery', 'height=400,width=600');
+                    mywindow.document.write('<html><head><title></title>');
+                    mywindow.document.write('</head><body>');
+                    mywindow.document.write(data);
+                    mywindow.document.write('</body></html>');
+                    mywindow.document.close();
+                    mywindow.focus();
+                    mywindow.print();
+                    mywindow.close();
+
+                }
+            });
+        }
 
     </script>
+
     <!-- FastClick -->
     <script src="{{asset('backend/vendors/fastclick/lib/fastclick.js')}}"></script>
     <!-- NProgress -->

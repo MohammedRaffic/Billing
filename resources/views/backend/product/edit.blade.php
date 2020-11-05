@@ -106,8 +106,16 @@
                                             @endif</b></span>
                                 </div>
                                 <div class="form-group">
+                                    <label for="stock">Stock*</label>
+                                    <input type="number" value="{{$product->stock}}" class="form-control" id="stock" name="stock" placeholder="Enter Available Stock">
+                                    <span class="error"><b>
+                                         @if($errors->has('stock'))
+                                                {{$errors->first('stock')}}
+                                            @endif</b></span>
+                                </div>
+                                <div class="form-group">
                                     <label for="price">Price*</label>
-                                    <input type="number" value="{{$product->price}}" class="form-control" id="price" name="price" placeholder="Enter price">
+                                    <input type="number" value="{{$product->price}}" class="form-control" id="price" name="price" placeholder="Enter price pre Item">
                                     <span class="error"><b>
                                          @if($errors->has('price'))
                                                 {{$errors->first('price')}}
@@ -139,7 +147,7 @@
 @endsection
 
 @section('script')
-    <script src="/backend/plugins/ckeditor/ckeditor.js"></script>
+    <script src="{{asset('backend/plugins/ckeditor/ckeditor.js')}}"></script>
     <script type="text/javascript">
         $(function(){
             var $foo = $('#name');

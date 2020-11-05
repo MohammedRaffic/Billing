@@ -6,7 +6,7 @@
         <th>Product Name</th>
         <th>Quantity</th>
         <th>Total Price</th>
-        <th>sales Date</th>
+        <th>Action</th>
     </tr>
     </thead>
     <tbody>
@@ -17,7 +17,12 @@
             <td>{{$pc->name}} </td>
             <td> {{$pc->quantity}}</td>
             <td>{{$pc->price}} </td>
-            <td> {{$pc->sales_date}}</td>
+            <td>
+                <form action="{{route('salescart.delete' ,[$pc->id,$pc->product_id])}}" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    {{ csrf_field()}}
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('are you sure to delete?')" ><i class="fa fa-trash-o"></i></button>
+                </form></td>
         </tr>
     @endforeach
     <tr>

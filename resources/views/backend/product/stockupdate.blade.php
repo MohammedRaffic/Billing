@@ -1,6 +1,6 @@
 @extends('backend.layouts.master')
 @section('title')
-    Petty Cash Edit Page
+    Product Stock Update Page
 @endsection
 @section('css')
 
@@ -11,18 +11,19 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>PettyCash Management </h3>
+                    <h3>Stock Management </h3>
                 </div>
                 <div class="title_right">
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                        <div class="col-md-5 col-sm-5 col-xs-12 form-group top_search" style="padding-left: 90px;">
+                        <div class="col-md-5 col-sm-5 col-xs-12 form-group top_search" style="padding-left: 75px;">
                             <div class="input-group">
-                                <a href="{{route('petty-cash.list')}}" class="btn btn-success">View petty cash List</a>
+                                <a href="{{route('product.list')}}" class="btn btn-success">View Product</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="clearfix"></div>
             @if(Session::has('success_message'))
                 <div class="alert alert-success">
@@ -38,38 +39,46 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>Edit Petty cash</h2>
+                            <h2>Update Stock of Product</h2>
                             <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                        aria-expanded="false"><i class="fa fa-wrench"></i></a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Settings 1</a></li>
-                                        <li><a href="#">Settings 2</a></li>
+                                        <li><a href="#">Settings 1</a>
+                                        </li>
+                                        <li><a href="#">Settings 2</a>
+                                        </li>
                                     </ul>
                                 </li>
-                                <li><a class="close-link"><i class="fa fa-close"></i></a></li>
+                                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                </li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
-                            <form id="btnSave" action="{{route('petty-cash.update',$pettycash->id)}}" method="POST">
+                            <form action="{{route('stock.update',$product->id)}}" method="post">
                                 {{ csrf_field()}}
                                 <div class="form-group">
-                                    <label for="totalcash">Leave petty cash</label>
-                                    <input type="number" value="{{$pettycash->totalcash}}"  class="form-control" id="totalcash" name="totalcash" placeholder="Enter pettycash amount">
+                                    <label for="stock">Already Available*</label>
+                                    <input type="number" value="{{$product->stock}}" class="form-control"  placeholder="Enter Available Stock" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="stock">Stock You Want To Add*</label>
+                                    <input type="number"  class="form-control" id="stock" name="stock" placeholder="Enter Stock You Want to Add" min="1">
                                     <span class="error"><b>
-                                         @if($errors->has('totalcash'))
-                                              {{$errors->first('totalcash')}}
+                                         @if($errors->has('stock'))
+                                                {{$errors->first('stock')}}
                                          @endif</b></span>
                                 </div>
                                 <!-- /.box-body -->
                                 <div class="box-footer">
-                                    <button type="submit" name="btnSave" class="btn btn-primary">Update petty Cash</button>
+                                    <button type="submit" name="btnCreate" class="btn btn-primary" >Update Stock</button>
                                 </div>
                             </form>
-                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,6 +86,7 @@
     </div>
     <!-- /page content -->
 @endsection
+
 @section('script')
 
 @endsection

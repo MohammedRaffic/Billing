@@ -1,33 +1,41 @@
 <!doctype html>
-<html lang="en">
-<head>
+<html><head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-</head>
-<body>
-<h2 align="center">Sales Bill</h2>
-<table border="1" align="center" cellpadding="5">
+</head><body>
+<p align="center"><strong>Vedha Foods</strong></p>
+<p align="center">Baneshwor Kathmandu</p>
+<p align="center">PH: 977-01-4783838</p>
+<p align="center">PAN No: 603655986</p>
+<hr>
+<p><?php
+echo date("y-m-d"); ?>
+&nbsp;
+<?php
+echo date("h:i:s:a");
+?></p>
+<hr>
+<table border="0" align="center">
     <thead>
     <tr>
+    
         <th>S.N.</th>
         <th>Product Name</th>
         <th>Quantity</th>
         <th>Price</th>
-        <th>sales Date</th>
     </tr>
     </thead>
     <tbody>
-    <?php $i=1 ?>
+    <?php $i=1?>
     @foreach($report as $all)
     <tr>
         <td>{{$i++}}</td>
         <td>{{$all->name}}</td>
         <td>{{$all->quantity}}</td>
         <td>{{$all->price}}</td>
-        <td>{{$all->created_at}}</td>
     </tr>
     @endforeach
     <tr>
@@ -44,11 +52,12 @@
                 Rs. {{$total}}
             @endif
         </td>
-        <td></td>
     </tr>
     </tbody>
 </table>
-</body>
-</html>
+<br>
+<!-- <p>prepared by: Srada &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Time: 12:06:46</p> -->
+<p align="center">Thank You !!!</p>
+</body></html>
 
 

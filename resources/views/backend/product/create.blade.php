@@ -102,7 +102,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="price">Price*</label>
-                                    <input type="number" class="form-control" id="price" name="price" placeholder="Enter price">
+                                    <input type="number" class="form-control" id="price" name="price" placeholder="Enter price per Item">
                                     <span class="error"><b>
                                          @if($errors->has('price'))
                                                 {{$errors->first('price')}}
@@ -128,7 +128,7 @@
 @endsection
 
 @section('script')
-    <script src="/backend/plugins/ckeditor/ckeditor.js"></script>
+    <script src="{{asset('backend/plugins/ckeditor/ckeditor.js')}}"></script>
     <script type="text/javascript">
         $(function(){
             var $foo = $('#name');

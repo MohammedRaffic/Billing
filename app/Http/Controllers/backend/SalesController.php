@@ -8,6 +8,8 @@ use App\Models\Salescart;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Session;
 use PDF;
 
@@ -15,8 +17,9 @@ class SalesController extends Controller
 {
     public function create()
     {
-        $product = Product::where('stock', '>=', 1)->get();
-        return view('backend.sales.create', compact('product', 'sales'));
+        $this->checkpermission('sales-create');
+        $salescart = Salescart::all();
+        return view('backend.sales.create', compact('sales', 'salescart'));
     }
 
     public function store(Request $request)
@@ -33,7 +36,7 @@ class SalesController extends Controller
             $sales->price = $request->price * $request->sales_quantity;
             $sales->sales_status = $request->sales_status;
             $sales->saller_name = Auth::user()->username;
-            $sales->sales_date = date('Y-m-d H:i:s');
+            $sales->sales_date = date('Y-m-d');
             if ($sales->save()) {
                 $product = Product::find($request->product_id);
                 $product->stock = $product->stock - $request->sales_quantity;
@@ -41,13 +44,15 @@ class SalesController extends Controller
                     return response(['success_message' => 'SuccessFully Make sales']);
                 }
             }
+
         } else {
-            return response(['success_message' => 'Filed To Make sales']);
+            return response(['error_message' => 'Filed To Make sales']);
         }
     }
 
     public function index()
     {
+        $this->checkpermission('sales-list');
         $sales = Sale::join('products', 'products.id', '=', 'sales.product_id')
             ->select('sales.*', 'products.name')
             ->orderBy('sales.created_at', 'DEC')
@@ -64,19 +69,17 @@ class SalesController extends Controller
         return view('backend.sales.ajaxlist', compact('sales'));
     }
 
-//    public function getproduct()
-//    {
-//        $product = Product::where('productcategory_id', $_POST['id'])->get();
-//        if (count($product) > 0) {
-//            $opt = "<option>---Select Product---</option>";
-//            foreach ($product as $p) {
-//                $opt .= "<option value='$p->id'>$p->name</option>";
-//            }
-//        } else {
-//            $opt = "<option>No Product Available for This Category</option>";
-//        }
-//        echo $opt;
-//    }
+    public function ajaxform()
+    {
+        $salescart = Salescart::all();
+        return view('backend.sales.ajaxform', compact('salescart'));
+    }
+
+    public function refreshproduct()
+    {
+        $product = Product::where('stock', '>=', 1)->get();
+        return view('backend.sales.refreshproduct', compact('product'));
+    }
 
     public function getquantity(Request $request)
     {
@@ -95,7 +98,6 @@ class SalesController extends Controller
     {
         $product = Product::where('id', $request->product_id)->get();
         echo $product[0]->name;
-
     }
 
     public function getallpdf()
@@ -103,8 +105,7 @@ class SalesController extends Controller
         $report = Salescart::join('products', 'products.id', '=', 'salescarts.product_id')
             ->select('salescarts.*', 'products.name')
             ->get();
-        $pdf = PDF::loadView('backend.pdfbill.salesbill', compact('report'));
-        return $pdf->download('customer.pdf');
+        return view('backend.pdfbill.salesbill', compact('report'));
     }
 
     public function getcustomreport(Request $request)
@@ -119,4 +120,34 @@ class SalesController extends Controller
         return $pdf->download('salesreport.pdf');
     }
 
+    public function savetosales(Request $request)
+    {
+        for ($i = 0; $i < $request->input('total_product'); $i++) {
+            $od = [
+                'product_id' => $request['product_id'][$i],
+                'quantity' => $request['quantity'][$i],
+                'price' => $request['price'][$i],
+                'sales_status' => $request['sales_status'][$i],
+                'saller_name' => Auth::user()->username,
+                'sales_date' => date('Y-m-d'),
+            ];
+            Sale::create($od);
+        }
+        DB::table('salescarts')->delete();
+        return redirect()->back()->with('success_message', 'Successfuly Clear Your Bucket and Sales Item store in Sales Record');
+
+    }
+
+    public function deletecart($id, $pid)
+    {
+        $product = Product::find($pid);
+        $salescart = Salescart::find($id);
+        $product->stock = $product->stock + $salescart->quantity;
+        if ($product->update()) {
+            $salescart->delete();
+            return redirect()->back()->with('success_message', 'Seccessfully deleted Item');
+        }else {
+            return redirect()->back()->with('error_messsage', 'Failed To Delete Item');
+        }
+    }
 }

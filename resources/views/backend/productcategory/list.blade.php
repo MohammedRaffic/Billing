@@ -63,7 +63,6 @@
                                     <th>S.N.</th>
                                     <th>Category Name</th>
                                     <th>Slug</th>
-                                    <th>Rank</th>
                                     <th>status</th>
                                     <th>created_by</th>
                                     <th>modified_by</th>
@@ -77,7 +76,6 @@
                                         <th> {{$i++}}</th>
                                         <td> <b>{{$pc->name}}</b></td>
                                         <td> {{$pc->slug}}</td>
-                                        <td> {{$pc->rank}}</td>
                                         <td>
                                             @if($pc->status == 1)
                                                 <span class="label label-success"> Active </span>
@@ -87,14 +85,19 @@
                                         </td>
                                         <td> {{$pc->created_by}}</td>
                                         <td> {{$pc->modified_by}}</td>
-                                        <td><a href="{{route('productcategory.edit',$pc->id)}}" class="btn btn-info"><i class="fa fa-pencil"></i> Edit</a>
-
-                                            <form action="{{route('productcategory.delete' ,$pc->id)}}" method="post">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                {{ csrf_field()}}
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('are you sure to delete?')" ><i class="fa fa-trash-o"></i> Delete</button>
-                                            </form>
-
+                                        <td>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <a href="{{route('productcategory.edit',$pc->id)}}" class="btn btn-info"><i class="fa fa-pencil"></i> Edit</a>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <form action="{{route('productcategory.delete' ,$pc->id)}}" method="post">
+                                                        <input type="hidden" name="_method" value="DELETE">
+                                                        {{ csrf_field()}}
+                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('are you sure to delete?')" ><i class="fa fa-trash-o"></i> Delete</button>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

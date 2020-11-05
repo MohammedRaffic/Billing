@@ -15,7 +15,7 @@
                 </div>
                 <div class="title_right">
                     <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                        <div class="col-md-5 col-sm-5 col-xs-12 form-group top_search" style="padding-left: 50px;">
+                        <div class="col-md-5 col-sm-5 col-xs-12 form-group top_search" style="padding-left: 120px;">
                             <div class="input-group">
                                 <a href="{{route('product.create')}}" class="btn btn-success">Create Product</a>
                             </div>
@@ -65,8 +65,8 @@
                                     <th>Name</th>
                                     <th>Code</th>
                                     <th>Quantity</th>
-                                    <th>Price</th>
                                     <th>stock</th>
+                                    <th>Price</th>
                                     <th>status</th>
                                     <th>created_by</th>
                                     <th>modified_by</th>
@@ -82,8 +82,8 @@
                                         <td>{{$pc->name}} </td>
                                         <td>{{$pc->code}} </td>
                                         <td> {{$pc->quantity}}</td>
-                                        <td> {{$pc->price}}</td>
                                         <td> {{$pc->stock}}</td>
+                                        <td> {{$pc->price}}</td>
                                         <td>
                                             @if($pc->status == 1)
                                                 <span class="label label-success"> Active </span>
@@ -94,13 +94,21 @@
                                         <td> {{$pc->created_by}}</td>
                                         <td> {{$pc->modified_by}}</td>
                                         <td>
-                                            <a href="{{route('product.edit',$pc->id)}}" class="btn btn-info"><i class="fa fa-pencil"></i> Edit</a>
-                                            <form action="{{route('product.delete' ,$pc->id)}}" method="post">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                {{ csrf_field()}}
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('are you sure to delete?')" ><i class="fa fa-trash-o"></i>Delete</button>
-                                            </form>
-
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <a href="{{route('product.edit',$pc->id)}}" class="btn btn-info"><i class="fa fa-pencil"></i></a>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <form action="{{route('product.delete' ,$pc->id)}}" method="post">
+                                                        <input type="hidden" name="_method" value="DELETE">
+                                                        {{ csrf_field()}}
+                                                        <button type="submit" class="btn btn-danger" onclick="return confirm('are you sure to delete?')" ><i class="fa fa-trash-o"></i></button>
+                                                    </form>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <a href="{{route('stock.edit',$pc->id)}}" class="btn btn-info"><i class="fa fa-plus"></i> Stock Update</a>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -116,7 +124,7 @@
 @endsection
 
 @section('script')
-    <script type="text/javascript" src="/backend/plugins/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="{{asset('backend/plugins/jquery.dataTables.min.js')}}"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#categorytable').DataTable();
